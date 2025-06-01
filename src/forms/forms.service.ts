@@ -23,7 +23,7 @@ export class FormsService {
     
     Keep going,
     Mental Saathi Notification Bot 🤖`
-        const subjectForUser = `${detail.email} joined your waiting list`
+        const subjectForUser = `Confirmation you succesfully joined our waiting list`
         const subjectForMe = `🔔 New user joined the Mental Saathi waiting list`
         const messageForUser = `Hey Dear,
     Thank you for joining the waiting list for Mental Saathi – we’re so glad to have you with us!
