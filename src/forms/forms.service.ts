@@ -1,15 +1,26 @@
+import { DatabaseService } from './../database/database.service';
 import { BadRequestException, Body, Injectable } from '@nestjs/common';
 import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class FormsService {
-    constructor(private readonly mailService: MailService) { }
+    constructor(private readonly mailService: MailService, private readonly databaseService: DatabaseService) { }
     async joinWaitlist(@Body() detail: any) {
 
         if (!detail) throw new BadRequestException({
             success: false,
             message: "email not entered"
         })
+        const joined = await this.databaseService.waitList.create({
+            data: {
+                email: detail.email
+            }
+        })
+        if (!joined) throw new BadRequestException({
+            message: "something unexpected happened",
+            success: false
+        })
+
         const messageForMe = `Hello Rhydham,
     
     A new user has just joined the Mental Saathi waiting list. 🎉
@@ -40,6 +51,7 @@ export class FormsService {
         await this.mailService.sendEmail(process.env.EMAIL_USER, subjectForMe, messageForMe)
         return {
             success: true,
+            ...joined,
             message: "you joined the waiting list"
         }
 
@@ -96,6 +108,20 @@ Team Mental Saathi
         if (!detail) throw new BadRequestException({
             success: false,
             message: "details not entered"
+        })
+        const userData = {
+            name: `${detail.first_name} ${detail.last_name}`,
+            email: detail.email,
+            phone: detail.phone_number,
+            role: detail.role,
+            institution: detail.institution
+        }
+        const touched = await this.databaseService.getInTouch.create({
+            data: userData
+        })
+        if (!touched) throw new BadRequestException({
+            message: "something unexpected happened please try later",
+            success: false
         })
         const messageForMe = `Hey Rhydham,
 

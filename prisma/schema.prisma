@@ -1,4 +1,9 @@
 // prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+
 datasource db {
   provider  = "postgresql"
   url  	    = env("DATABASE_URL")
@@ -6,5 +11,20 @@ datasource db {
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
 model WaitList{
-  number Int @unique
+  id Int @unique @default(autoincrement())
+  email String @unique
 }
+
+model GetInTouch{
+  id  Int @unique @default(autoincrement())
+  name String 
+  phone Int @unique
+  role String
+  institution String
+
+}
+// 👤 Name: ${detail.first_name} ${detail.last_name}  
+// 📧 Email: ${detail.email}
+// 📱 Phone: ${detail.phone_number}
+// 🎓 Role:${detail.role}
+// 🏢 Institution/Organization: ${detail.institution}
